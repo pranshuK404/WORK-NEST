@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = async (to, otp) => {
+export const sendMail = async (to, otp) => {
   await transporter.sendMail({
     from: '"MyApp" <no-reply@myapp.com>',
     to,
@@ -19,5 +19,5 @@ const sendMail = async (to, otp) => {
   });
 };
 
-export default sendMail
+
 

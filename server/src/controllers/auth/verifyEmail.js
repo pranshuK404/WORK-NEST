@@ -1,7 +1,7 @@
 import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/ApiError.js";
 import ApiResponse from "../../utils/ApiResponse";
-import cryptoTokenUtility from "../../utils/auth/cryptoToken.js";
+import {cryptoTokenUtility} from "../../utils/auth/cryptoToken.js";
 import { generateAccessAndRefreshTokens } from "../../utils/auth/generateAccessRefreshTokens.js";
 import { cookieOptions } from "../../utils/constants.js";
 
@@ -16,7 +16,7 @@ export const verifyEmail = async (req, res) => {
   const user = await User.findOne({
     emailVerificationToken: hashedUserToken,
     emailVerificationTokenExpiry: { $gt: Date.now() },
-  });
+  }).select();
 
   if (!user) {
     throw new ApiError(400, "Invalid verification token");

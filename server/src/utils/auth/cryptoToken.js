@@ -24,9 +24,8 @@ const hashUserToken = (token) => {
   return crypto.createHash("sha256").update(token).digest("hex");
 };
 
-const cryptoTokenUtility = {
+export const cryptoTokenUtility = {
   generateToken,
   hashUserToken,
 };
 
-export default cryptoTokenUtility;

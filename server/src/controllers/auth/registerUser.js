@@ -1,7 +1,7 @@
 import ApiError from "../../utils/ApiError";
-import cryptoTokenUtility from "../../utils/auth/cryptoToken.js";
+import {cryptoTokenUtility} from "../../utils/auth/cryptoToken.js";
 import { User } from "../../models/user.model";
-import sendMail from "../../utils/sendMail";
+import {sendMail} from "../../utils/sendMail";
 import ApiResponse from "../../utils/ApiResponse.js";
 
 export const registerUser = async (req, res) => {
