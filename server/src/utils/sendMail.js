@@ -10,12 +10,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendMail = async (to, otp) => {
+export const sendMail = async (to, token) => {   //---WORK IS NEEDED
   await transporter.sendMail({
     from: '"MyApp" <no-reply@myapp.com>',
     to,
     subject: "Verify your email",
-    html: `Verification otp: ${otp}`,
+    html: `Verification otp: ${token}`,
   });
 };
 
