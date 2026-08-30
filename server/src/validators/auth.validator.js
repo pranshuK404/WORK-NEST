@@ -1,22 +1,28 @@
 import * as z from "zod";
 
 //--Register validation schema
-export const registerValidator = z.object({
-  email: z.trim().email(),
-  fullname: z.string().trim().min(5).max(50),
-  password: z.string().trim().min(8).max(50),
+export const registerSchema = z.object({
+  body: z.object({
+    email: z.email().trim(),
+    fullname: z.string().trim().min(5).max(50),
+    password: z.string().trim().min(8).max(50),
+  }),
 });
 //--Login validation schema
-export const loginValidator = z.object({
-  email: z.trim().email(),
-  password: z.string().trim().min(8).max(50),
+export const loginSchema = z.object({
+  body: z.object({
+    email: z.email().trim(),
+    password: z.string().trim().min(8).max(50),
+  }),
 });
 //--Forgot password validation schema
-export const forgotPasswordValidator = z.object({
-  email: z.trim().email(),
+export const forgotPasswordSchema = z.object({
+  body: z.object({
+    email: z.email().trim(),
+  }),
 });
 //--Reset password validation schema
-export const resetPasswordValidator = z.object({
+export const resetPasswordSchema = z.object({
   params: z.object({
     token: z.string().trim().min(1),
   }),
@@ -26,15 +32,21 @@ export const resetPasswordValidator = z.object({
   }),
 });
 //--Change password validation schema
-export const changePasswordValidator = z.object({
-  currentPassword: z.string().trim().min(8).max(50),
-  newPassword: z.string().trim().min(8).max(50),
+export const changePasswordSchema = z.object({
+  body: z.object({
+    currentPassword: z.string().trim().min(8).max(50),
+    newPassword: z.string().trim().min(8).max(50),
+  }),
 });
 //---Verify email validation schema
-export const verifyEmailValidator = z.object({
-  token: z.string().trim().min(1),
+export const verifyEmailSchema = z.object({
+  body: z.body({
+    token: z.string().trim().min(1),
+  }),
 });
 //---Resend email validation schema
-export const resendEmailValidator = z.object({
-  email: z.trim().email(),
+export const resendEmailSchema = z.object({
+  body: z.body({
+    email: z.email().trim(),
+  }),
 });
