@@ -45,7 +45,7 @@ export const verifyEmailSchema = z.object({
   }),
 });
 //---Resend email validation schema
-export const resendEmailSchema = z.object({
+export const resendVerificationEmailSchema = z.object({
   body: z.body({
     email: z.email().trim(),
   }),
