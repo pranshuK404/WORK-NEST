@@ -10,7 +10,7 @@ const projectSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      trim :true
+      trim: true,
     },
     description: {
       type: String,
@@ -33,5 +33,11 @@ const projectSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+projectSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.__v;
+  return obj;
+};
 
 export const Project = mongoose.model("Project", projectSchema);
