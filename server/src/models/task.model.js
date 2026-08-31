@@ -85,4 +85,10 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+taskSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.__v;
+  return obj;
+};
+
 export const Task = mongoose.model("Task", taskSchema);
