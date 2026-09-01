@@ -14,12 +14,16 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       required: true,
       index: true,
-      index: true,
     },
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
       required: true,
+      index: true,
+    },
+    assignedTeamId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Team",
       index: true,
     },
     description: {
@@ -50,12 +54,6 @@ const taskSchema = new mongoose.Schema(
       default: null,
       index: true,
     },
-    assignees: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
     subtasks: [
       {
         title: {
