@@ -12,7 +12,7 @@ const teamSchema = new mongoose.Schema(
       ref: "Project",
       required: true,
     },
-    name: {
+    teamName: {
       type: string,
       required: true,
     },
