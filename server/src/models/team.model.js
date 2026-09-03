@@ -18,15 +18,17 @@ const teamSchema = new mongoose.Schema(
     },
     teamMembers: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        role: {
+          type: String,
+          enum: ["member", "lead"],
+          default: "member",
+        },
       },
     ],
-    teamLead: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    
   },
   { timestamps: true },
 );
