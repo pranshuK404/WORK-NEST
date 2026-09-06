@@ -19,7 +19,7 @@ export const getTask = async (req, res) => {
   const task = await Task.findOne({
     _id: taskId,
     projectId,
-  }).lean();
+  }).select("-subtasks").lean();
 
   if (!task) {
     throw new ApiError(404, "Task does not exist");

@@ -16,7 +16,7 @@ export const getAllTasks = async (req, res) => {
     throw new ApiError(403, "You are not a member of this project");
   }
 
-  const tasks = await Task.find({ projectId }).lean();
+  const tasks = await Task.find({ projectId }).select("-subtasks").lean();
   if (tasks.length === 0) {
     throw new ApiError(404, "Tasks does not exist");
   }

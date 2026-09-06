@@ -27,7 +27,7 @@ export const assignTeamToTask = async (req, res) => {
 
   const [teamExists, task] = await Promise.all([
     Team.exists({ _id: teamId, projectId }),
-    Task.findOne({ _id: taskId, projectId }),
+    Task.findOne({ _id: taskId, projectId }).select("assignedTeamId").lean(),
   ]);
 
   if (!teamExists) {

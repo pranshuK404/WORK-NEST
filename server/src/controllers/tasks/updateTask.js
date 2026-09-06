@@ -34,7 +34,7 @@ export const updateTask = async (req, res) => {
     Task.findOne({
       _id: taskId,
       projectId,
-    }),
+    }).select("-subtasks").lean(),
   ]);
 
   if (!project) {
