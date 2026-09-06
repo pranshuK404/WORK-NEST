@@ -9,7 +9,7 @@ export const getProject = async (req, res) => {
     throw new ApiError(400, "Project does not exists");
   }
 
-  const project = await Project.findById(projectId);
+  const project = await Project.findById(projectId).select(" -members").lean();
 
   if (!project) {
     throw new ApiError(400, "Project does not exists");

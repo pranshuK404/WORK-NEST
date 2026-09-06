@@ -19,7 +19,7 @@ export const getTask = async (req, res) => {
   const task = await Task.findOne({
     _id: taskId,
     projectId,
-  });
+  }).lean();
 
   if (!task) {
     throw new ApiError(404, "Task does not exist");
@@ -27,5 +27,5 @@ export const getTask = async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, task.toJSON(), "Task retrieved successfully"));
+    .json(new ApiResponse(200, task, "Task retrieved successfully"));
 };

@@ -1,5 +1,6 @@
 import { Project } from "../../models/project.model.js";
 import { Task } from "../../models/task.model.js";
+import { Team } from "../../models/team.model.js";
 import ApiError from "../../utils/ApiError.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
@@ -7,63 +8,90 @@ export const updateTask = async (req, res) => {
   const { taskId, projectId } = req.params;
   const userId = req.user._id;
 
-  const { title, description, dueDate, priority } = req.body;
+  const { title, description, dueDate, priority, status } = req.body;
 
   if (
     title === undefined &&
     description === undefined &&
     dueDate === undefined &&
-    priority === undefined
+    priority === undefined &&
+    status === undefined
   ) {
-    throw new ApiError(400, "Nothing to update");
+    throw new ApiError(
+      400,
+      "At least one field is required to update the task",
+    );
   }
 
-  const project = await Project.findById(projectId, {
-    createdBy: 1,
-    members: 1,
-  }).lean();
+  const [project, task] = await Promise.all([
+    Project.findOne({
+      _id: projectId,
+      "members.user": userId,
+    })
+      .select(" members ")
+      .lean(),
+
+    Task.findOne({
+      _id: taskId,
+      projectId,
+    }),
+  ]);
 
   if (!project) {
-    throw new ApiError(404, "Project does not exist");
-  }
-
-  const projectMember = project.members.find(
-    (member) => member.user.toString() === userId.toString(),
-  );
-
-  if (!projectMember) {
     throw new ApiError(403, "You are not a member of this project");
   }
 
-  const task = await Task.findOne({
-    _id: taskId,
-    projectId,
-  });
+  const isManagerOrAdmin = project.members.some(
+    (member) =>
+      member.user.toString() === userId.toString() &&
+      ["admin", "manager"].includes(member.role),
+  );
 
   if (!task) {
     throw new ApiError(404, "Task does not exist");
   }
 
-  const isManager = ["admin", "manager"].includes(projectMember.role);
+  let isTeamLead = false;
 
-  const isAssignee = task.assignees.some(
-    (assignee) => assignee.toString() === userId.toString(),
-  );
+  if (task.assignedTeamId) {
+    isTeamLead = await Team.exists({
+      _id: task.assignedTeamId,
+      projectId,
+      teamMembers: {
+        $elemMatch: {
+          user: userId,
+          role: "lead",
+        },
+      },
+    });
+  }
 
-  if (!isManager && !isAssignee) {
+  if (!isManagerOrAdmin && !isTeamLead) {
     throw new ApiError(403, "You are not allowed to update this task");
   }
 
-  if (title !== undefined) task.title = title;
-  if (description !== undefined) task.description = description;
-  if (isManager && dueDate !== undefined) task.dueDate = dueDate;
-  if (priority !== undefined) task.priority = priority;
+  if (isManagerOrAdmin) {
+    if (title !== undefined) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (dueDate !== undefined) task.dueDate = dueDate;
+    if (priority !== undefined) task.priority = priority;
+  }
+
+  if (isTeamLead && status !== undefined) {
+    task.status = status;
+
+    if (status === "completed") {
+      task.completedAt = new Date();
+    } else {
+      task.completedAt = null;
+    }
+  }
 
   const updatedTask = await task.save();
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, updatedTask.toJSON(), "Task updated successfully"),
+      new ApiResponse(200, updatedTask.toObject(), "Task updated successfully"),
     );
 };
