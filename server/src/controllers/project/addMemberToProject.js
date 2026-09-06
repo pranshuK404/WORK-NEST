@@ -5,10 +5,24 @@ import ApiResponse from "../../utils/ApiResponse.js";
 
 export const addMemberToProject = async (req, res) => {
   const { projectId } = req.params;
+  const userId = req.user._id;
   const { email } = req.body;
 
   if (!email) {
     throw new ApiError(400, "Email is required");
+  }
+  const isProjectAdminOrManager = await Project.exists({
+    _id: projectId,
+    members: {
+      $elemMatch: {
+        user: userId,
+        role: { $in: ["admin", "manager"] },
+      },
+    },
+  });
+
+  if (!isProjectAdminOrManager) {
+    throw new ApiError(403, "You are not allowed to add project members");
   }
 
   const user = await User.findOne({ email });

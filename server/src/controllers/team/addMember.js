@@ -30,7 +30,7 @@ export const addMember = async (req, res) => {
     throw new ApiError(404, "User does not exist.");
   }
 
-  const team = await Team.findOne({ _id: teamId, project: projectId });
+  const team = await Team.findOne({ _id: teamId, projectId: projectId });
 
   if (!team) {
     throw new ApiError(404, "Team does not exist.");

@@ -7,7 +7,7 @@ export const getAllTeams = async (req, res) => {
   const { projectId } = req.params;
   const userId = req.user._id;
 
-  const projectMember = Project.exists({
+  const projectMember =await Project.exists({
     _id: projectId,
     "members.user": userId,
   });

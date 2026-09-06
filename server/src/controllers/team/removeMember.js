@@ -24,7 +24,7 @@ export const removeMember = async (req, res) => {
   const removedMember = await Team.findOneAndUpdate(
     {
       _id: teamId,
-      project: projectId,
+      projectId: projectId,
       "teamMembers.user": memberId,
     },
     {

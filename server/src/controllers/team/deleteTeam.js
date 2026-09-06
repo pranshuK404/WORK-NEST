@@ -1,5 +1,6 @@
 import { Project } from "../../models/project.model.js";
 import { Team } from "../../models/team.model.js";
+import { Task } from "../../models/task.model.js";
 import ApiError from "../../utils/ApiError.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
@@ -18,9 +19,22 @@ export const deleteTeam = async (req, res) => {
     throw new ApiError(403, "You are not allowed to do the action");
   }
 
+  const assignedTask = await Task.exists({
+    assignedTeamId: teamId,
+    projectId,
+    status: { $in: ["pending", "in_progress"] },
+  });
+
+  if (assignedTask) {
+    throw new ApiError(
+      409,
+      "Cannot delete team. Reassign all active tasks first",
+    );
+  }
+
   const deletedTeam = await Team.findOneAndDelete({
     _id: teamId,
-    project: projectId,
+    projectId: projectId,
   });
 
   if (!deletedTeam) {

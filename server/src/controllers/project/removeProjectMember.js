@@ -1,63 +1,53 @@
 import { Project } from "../../models/project.model.js";
-import { Task } from "../../models/task.model.js";
+import { Team } from "../../models/team.model.js";
 import ApiError from "../../utils/ApiError.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
-export const removeProjectMember = async (req, res) => {
+export const removeMemberFromProject = asyncHandler(async (req, res) => {
   const { projectId, memberId } = req.params;
+  const userId = req.user._id;
 
-  const activeProject = await Task.exists({
-    projectId: projectId,
-    assignees: memberId,
-    status: {
-      $in: ["pending", "in_progress"],
+  const project = await Project.findOne({
+    _id: projectId,
+    members: {
+      $elemMatch: {
+        user: userId,
+        role: { $in: ["admin", "manager"] },
+      },
     },
   });
 
-  if (activeProject) {
-    throw new ApiError(
-      400,
-      "Member has active tasks in this project and cannot be removed",
-    );
+  if (!project) {
+    throw new ApiError(403, "You are not allowed to remove project members");
   }
 
-  const project = await Project.findOneAndUpdate(
-    {
-      _id: projectId,
-      "members.user": memberId,
-    },
-    {
-      $pull: {
-        members: {
-          user: memberId,
-        },
-      },
-    },
-    {
-      new: true,
-    },
-  );
-  if (!project) {
-    throw new ApiError(
-      404,
-      "Project does not exist or member is not part of the project",
-    );
+  const member = project.members.find((member) => member.user.equals(memberId));
+
+  if (!member) {
+    throw new ApiError(404, "Member not found in project");
   }
-  await Task.updateMany(
-    {
-      projectId: projectId,
-      assignees: memberId,
-    },
-    {
-      $pull: {
-        assignees: memberId,
-      },
-    },
-  );
+
+  // Don't allow removing project admin
+  if (member.role === "admin") {
+    throw new ApiError(400, "Cannot remove the project admin");
+  }
+
+  const teamMembership = await Team.exists({
+    projectId,
+    "teamMembers.user": memberId,
+  });
+
+  if (teamMembership) {
+    throw new ApiError(409, "Remove member from their team first");
+  }
+
+  project.members.pull({ user: memberId });
+
+  await project.save();
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, project.toJSON(), "Member removed from project"),
+      new ApiResponse(200, null, "Member removed from project successfully"),
     );
-};
+});

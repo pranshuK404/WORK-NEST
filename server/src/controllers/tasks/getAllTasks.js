@@ -17,9 +17,6 @@ export const getAllTasks = async (req, res) => {
   }
 
   const tasks = await Task.find({ projectId }).select("-subtasks").lean();
-  if (tasks.length === 0) {
-    throw new ApiError(404, "Tasks does not exist");
-  }
   return res
     .status(200)
     .json(new ApiResponse(200, tasks, "Tasks fetched successfully"));
