@@ -60,17 +60,25 @@ const taskSchema = new mongoose.Schema(
           type: String,
           required: true,
           trim: true,
-          maxlength: 500,
+          maxlength: 200,
         },
 
-        assignee: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+        // assignee: {   //**later on we can add this feature to assign a subtask to a user**
+        //   type: mongoose.Schema.Types.ObjectId,
+        //   ref: "User",
+        //   default: null,
+        // },
+        dueDate:{
+          type: Date,
           default: null,
         },
 
         isCompleted: {
           type: Boolean,
+          enum:{
+            values: [true, false],
+            message: "Invalid isCompleted",
+          },
           default: false,
         },
       },
