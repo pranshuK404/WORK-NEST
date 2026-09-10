@@ -33,7 +33,7 @@ export const registerUser = async (req, res) => {
     .json(
       new ApiResponse(
         201,
-        createdUser,
+        createdUser.toJSON(),
         "User registered successfully, Please verify your email",
       ),
     );
