@@ -40,13 +40,13 @@ export const changePasswordSchema = z.object({
 });
 //---Verify email validation schema
 export const verifyEmailSchema = z.object({
-  body: z.body({
+  body: z.object({
     token: z.string().trim().min(1),
   }),
 });
 //---Resend email validation schema
 export const resendVerificationEmailSchema = z.object({
-  body: z.body({
+  body: z.object({
     email: z.email().trim(),
   }),
 });
