@@ -13,7 +13,7 @@ const teamSchema = new mongoose.Schema(
       required: true,
     },
     teamName: {
-      type: string,
+      type: String,
       required: true,
     },
     teamMembers: [

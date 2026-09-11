@@ -3,7 +3,7 @@ import { Team } from "../../models/team.model.js";
 import ApiError from "../../utils/ApiError.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
-export const removeMemberFromProject = asyncHandler(async (req, res) => {
+export const removeMemberFromProject = async (req, res) => {
   const { projectId, memberId } = req.params;
   const userId = req.user._id;
 
@@ -50,4 +50,4 @@ export const removeMemberFromProject = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(200, null, "Member removed from project successfully"),
     );
-});
+}

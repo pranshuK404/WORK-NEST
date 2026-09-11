@@ -12,9 +12,11 @@ const validate = (schema) => {
         errors: result.error.issues,
       });
     }
+    req.body = result.data.body;
+    
 
     next();
   };
 };
 
-export default validate;  
+export default validate;
