@@ -3,7 +3,7 @@ import * as z from "zod";
 //--Create project validation schema
 export const createProjectSchema = z.object({
   body: z.object({
-    name: z.string().trim().min(3).max(50),
+    title: z.string().trim().min(3).max(50),
     description: z.string().trim().max(500),
   }),
 });
@@ -12,8 +12,8 @@ export const createProjectSchema = z.object({
 
 export const updateProjectSchema = z.object({
   body: z.object({
-    name: z.string().trim().optional().min(3).max(50),
-    description: z.string().trim().optional().max(500),
+    title: z.string().trim().min(3).max(50).optional(),
+    description: z.string().trim().max(500).optional(),
   }),
   params: z.object({
     projectId: z.string().trim().min(1),
@@ -29,7 +29,7 @@ export const getProjectSchema = z.object({
 
 //---delete project validation schema
 
-export const deleteProjectsSchema = z.object({
+export const deleteProjectSchema = z.object({
   params: z.object({
     projectId: z.string().trim().min(1),
   }),
@@ -57,7 +57,7 @@ export const removeMemberFromProjectSchema = z.object({
 
 //   get project members validation schema
 
-export const getProjectMembers = z.object({
+export const getProjectMembersSchema = z.object({
   params: z.object({
     projectId: z.string().trim().min(1),
   }),
@@ -71,6 +71,6 @@ export const changeProjectMemberRoleSchema = z.object({
     memberId: z.string().trim().min(1),
   }),
   body: z.object({
-    role: z.string().trim().enum(["manager", "member"]),
+    role: z.enum(["manager", "member"]),
   }),
 });

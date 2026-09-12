@@ -7,7 +7,7 @@ export const createTaskSchema = z.object({
     title: z.string().trim().min(3).max(50),
     description: z.string().trim().max(500),
     dueDate: z.date().optional(),
-    priority: z.string().trim().enum(["low", "high"]).optional(),
+    priority: z.enum(["low", "high"]).optional(),
   }),
   params: z.object({
     projectId: z.string().trim().min(1),
@@ -35,14 +35,27 @@ export const getAllTasksSchema = z.object({
 
 export const updateTaskSchema = z.object({
   body: z.object({
-    title: z.string().trim().optional().min(3).max(50),
-    description: z.string().trim().optional().max(500),
+    title: z.string().trim().min(3).max(50).optional(),
+    description: z.string().trim().max(500).optional(),
     dueDate: z.date().optional(),
-    priority: z.string().trim().enum(["low", "high"]).optional(),
+    priority: z.enum(["low", "high"]).optional(),
   }),
   params: z.object({
     taskId: z.string().trim().min(1),
     projectId: z.string().trim().min(1),
+  }),
+});
+
+//---change task status validation schema
+
+export const changeTaskStatusSchema = z.object({
+  params: z.object({
+    teamId: z.string().trim().min(1),
+    taskId: z.string().trim().min(1),
+    projectId: z.string().trim().min(1),
+  }),
+  body: z.object({
+    status: z.enum(["pending", "in_progress", "completed"]),
   }),
 });
 

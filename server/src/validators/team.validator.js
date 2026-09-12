@@ -33,7 +33,7 @@ export const addMemberSchema = z.object({
     projectId: z.string().trim().min(1),
   }),
   body: z.object({
-    role: z.string().trim().enum(["manager", "member"]),
+    role: z.enum(["manager", "member"]).optional(),
     email: z.email().trim(),
   }),
 });
@@ -58,7 +58,7 @@ export const setTeamLeadSchema = z.object({
 
 //--- get all teams validation schema
 
-export const getAllTeams = z.object({
+export const getAllTeamsSchema = z.object({
   params: z.object({
     projectId: z.string().trim().min(1),
   }),

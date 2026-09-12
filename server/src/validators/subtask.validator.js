@@ -33,7 +33,7 @@ export const deleteSubtaskSchema = z.object({
 //---edit subtask validation schema
 export const editSubtaskSchema = z.object({
   body: z.object({
-    title: z.string().optional().trim().min(3).max(50),
+    title: z.string().trim().min(3).max(50).optional(),
     dueDate: z.date().optional(),
   }),
   params: z.object({

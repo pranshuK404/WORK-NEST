@@ -4,7 +4,7 @@ import { Team } from "../../models/team.model.js";
 import ApiError from "../../utils/ApiError.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 
-export const updateTaskStatus = async (req, res) => {
+export const changeTaskStatus = async (req, res) => {
   const { taskId, projectId } = req.params;
   const { status } = req.body;
   const userId = req.user._id;
