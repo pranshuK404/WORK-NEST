@@ -40,7 +40,7 @@ export const changeProjectMemberRole = async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        updatedProject.toJSON(),
+        updatedProject.members,
         "Project member role updated successfully",
       ),
     );

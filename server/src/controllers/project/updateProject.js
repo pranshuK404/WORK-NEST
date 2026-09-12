@@ -23,7 +23,7 @@ export const updateProject = async (req, res) => {
     projectId,
     { $set: updatedData },
     { new: true, runValidators: true },
-  );
+  ).select("-members");
 
   if (!project) {
     throw new ApiError(404, "Project does not exists");

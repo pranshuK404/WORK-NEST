@@ -20,11 +20,11 @@ export const getTeam = async (req, res) => {
     _id: teamId,
     projectId: projectId,
   })
-    .populate("members.user", "fullname email avatar")
+    .populate("teamMembers.user", "fullname email avatar")
     .lean();
 
   if (!team) {
     throw new ApiError(404, "Team not found");
   }
-  res.status(200).json(new ApiResponse(200, team, "Team fetched successfully"));
+  res.status(200).json(new ApiResponse(200, team.teamMembers, "Team fetched successfully"));
 };

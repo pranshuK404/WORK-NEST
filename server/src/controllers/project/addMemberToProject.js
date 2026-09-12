@@ -52,6 +52,6 @@ export const addMemberToProject = async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, updatedProject.toJSON(), "Member added to project"),
+      new ApiResponse(200, updatedProject.members, "Member added to project"),
     );
 };

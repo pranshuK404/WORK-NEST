@@ -16,10 +16,7 @@ export const getAllTeams = async (req, res) => {
     throw new ApiError(403, "You are not allowed to access");
   }
 
-  const teams = await Team.find({ projectId }).populate(
-    "members.user",
-    "fullname email avatar",
-  );
+  const teams = await Team.find({ projectId })
 
   if (teams.length === 0) {
     throw new ApiError(404, "Teams does not exist");

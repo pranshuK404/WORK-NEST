@@ -18,7 +18,6 @@ export const getProject = async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, project.toJSON()),
-      "Project Fetched Successfully",
+      new ApiResponse(200, project, "Project Fetched Successfully"),
     );
 };

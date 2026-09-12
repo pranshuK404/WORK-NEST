@@ -30,6 +30,19 @@ export const addMember = async (req, res) => {
     throw new ApiError(404, "User does not exist.");
   }
 
+  // 3. Check applicant belongs to project
+  const isProjectMember = await Project.exists({
+    _id: projectId,
+    "members.user": applicant._id,
+  });
+
+  if (!isProjectMember) {
+    throw new ApiError(
+      400,
+      "User must be a member of the project before joining a team.",
+    );
+  }
+
   const team = await Team.findOne({ _id: teamId, projectId: projectId });
 
   if (!team) {
