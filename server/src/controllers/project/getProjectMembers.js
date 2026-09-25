@@ -11,7 +11,7 @@ export const getProjectMembers = async (req, res) => {
     "members.user": userId,
   })
     .select("members")
-    .populate("members.user", "name email avatar")
+    .populate("members.user", "fullname email avatar")
     .lean();
 
   if (!project) {
