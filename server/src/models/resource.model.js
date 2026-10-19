@@ -64,6 +64,11 @@ const resourceSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+
+    cloudinaryResourceType: {
+      type: String,
+      enum: ["image", "video", "raw"],
+    },
   },
   {
     timestamps: true,
